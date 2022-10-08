@@ -43,6 +43,7 @@ const adminBro = new AdminBro({
                     },
                     imagePath: {
                         isVisible: { list: false, filter: false, show: true, edit: true },
+                        isTitle: true,
                         components: {
                             show: AdminBro.bundle('../components/admin-imgPath-component.jsx'),
                         },
