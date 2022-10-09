@@ -2,6 +2,7 @@ var moment = require('moment');
 const Product = require('../models/product');
 const Catagory = require('../models/category');
 
+
 class productController {
     //[GET] /product/
     async getAllProducts(req, res) {
