@@ -16,7 +16,6 @@ const adminBro = new AdminBro({
     rootPath: '/admin',
     branding: {
         companyName: 'dLaw Shoes',
-        logo: '/images/logo-trans.png',
         softwareBrothers: false,
     },
     resources: [

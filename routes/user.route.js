@@ -13,9 +13,9 @@ const {
     validateContactUs,
 } = require('../config/validator');
 const csrf = require('csurf');
-const csurfProtection = csrf();
+const csrfProtection = csrf();
 
-router.use(csurfProtection);
+router.use(csrfProtection);
 router.get('/signup', middleware.isNotLoggedIn, userController.getSignup);
 router.post(
     '/signup',

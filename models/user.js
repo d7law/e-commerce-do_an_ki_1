@@ -17,14 +17,17 @@ const userSchema = new Schema({
     },
 });
 
+// Cant reduce methods?
 userSchema.methods.encryptPassword = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
 
 userSchema.methods.validPassword = (candidatePassword) => {
+    console.log()
     if (this.password != null) {
         return bcrypt.compareSync(candidatePassword, this.password);
     } else {
+        console.log('this password:' + this.password);
         return false;
     }
 };

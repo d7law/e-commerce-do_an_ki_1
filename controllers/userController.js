@@ -96,9 +96,15 @@ class userController {
 
     //[GET] //user/logout
     logout(req, res) {
-        req.logout();
-        req.session.cart = null;
-        res.redirect('/');
+        req.logout((err) => {
+            if (err) {
+                return console.log(err);
+            } else {
+                req.session.cart = null;
+                return res.redirect('/');
+            }
+        });
+
     }
 }
 

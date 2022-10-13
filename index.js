@@ -1,19 +1,20 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv');
-const db = require('./config/db/connectdb');
+const dotenv = require('dotenv').config();
+const db = require('./config/db/connectdb').connect();
 const path = require('path');
+const passport = require('passport');
+
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
 var MongoStore = require('connect-mongo');
 const Category = require('./models/category');
 const flash = require('connect-flash');
-const passport = require('passport');
 const adminRouter = require('./routes/admin');
 
-dotenv.config();
-db.connect();
+//config passport
+require('./config/passport')
 // ejs view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -76,8 +77,10 @@ app.use((req, res, next) => {
 //router config
 const usersRouter = require('./routes/user.route');
 const productsRouter = require('./routes/product.route');
+const indexRouter = require('./routes/index')
 app.use('/user', usersRouter);
 app.use('/products', productsRouter);
+app.use('/', indexRouter)
 
 app.get('/', (req, res) => {
     res.send('hello world');

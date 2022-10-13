@@ -28,18 +28,17 @@ passport.use(
                     return done(null, false, { message: 'Email already exists' });
                 }
                 if (password != req.body.password2) {
-                    return done(null, false, { message: 'Wrong password' });
+                    return done(null, false, { message: 'Passwords must match' });
                 }
-                const newUser = await new User({
-                    username: req.body.name,
-                    email: email,
-                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),
-                });
+                const newUser = await new User();
+                newUser.email = email;
+                newUser.password = newUser.encryptPassword(password);
+                newUser.username = req.body.name;
                 await newUser.save();
                 return done(null, newUser);
-            } catch (err) {
-                console.log(err);
-                return done(err);
+            } catch (error) {
+                console.log(error);
+                return done(error);
             }
         },
     ),
@@ -57,15 +56,17 @@ passport.use(
             try {
                 const user = await User.findOne({ email: email });
                 if (!user) {
-                    return done(null, false, { message: 'User does not exist' });
+                    return done(null, false, { message: 'User doesn\'t exist' });
                 }
-                if (!user.validPassword(password)) {
-                    return done(null, false, { message: 'Wrong password' });
+                if (!bcrypt.compareSync(password, user.password)) {
+                //if(!user.validPassword(password)){
+                    console.log(bcrypt.compareSync(password, user.password))
+                    return done(null, false, { message: 'Wrong password rồi kìa ' });
                 }
                 return done(null, user);
-            } catch (err) {
-                console.log(err);
-                return done(err);
+            } catch (error) {
+                console.log(error);
+                return done(error);
             }
         },
     ),
