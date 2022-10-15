@@ -68,6 +68,57 @@ class productController {
             res.redirect('/');
         }
     }
+
+    //[GET] /:slug
+    async getSlug(req, res) {
+        const successMsg = req.flash('success')[0];
+        const errorMsg = req.flash('error')[0];
+        const perPage = 8;
+        let page = parseInt(req.query.page) || 1;
+        try {
+            const foundCategory = await Category.findOne({ slug: req.params.slug });
+            const allProducts = await Product.find({ category: foundCategory.id })
+                .sort('-createdAt')
+                .skip(perPage * page - perPage)
+                .limit(perPage)
+                .populate('category');
+            const count = await Product.count({ category: foundCategory.id });
+
+            res.render('shop/index', {
+                pageName: foundCategory.title,
+                currentCategory: foundCategory,
+                products: allProducts,
+                successMsg,
+                errorMsg,
+                current: page,
+                breadcrumbs: req.breadcrumbs,
+                home: '/products/' + req.params.slug.toString() + '/?',
+                page: Math.ceil(count / perPage),
+            });
+        } catch (e) {
+            console.log(e);
+            return res.redirect('/');
+        }
+    }
+
+    async getIdBySLug(req, res) {
+        const successMsg = req.flash('success')[0];
+        const errorMsg = req.flash('error')[0];
+        try {
+            const product = await Product.findById(req.params.id)
+                .populate('category');
+            res.render('shop/product', {
+                pageName: product.title,
+                product,
+                successMsg,
+                errorMsg,
+                moment: moment,
+            });
+        } catch (err) {
+            console.log(err);
+            res.redirect('/');
+        }
+    }
 }
 
 module.exports = new productController();

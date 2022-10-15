@@ -30,18 +30,19 @@
 
 <!-- Store's Caterogy -->
 <div class="container">
-    <h3 class="text-center mb-3 mt-4">Categories</h3>
+    <h3 class="text-center mb-3 mt-4">HOT Brands</h3>
     <% if(categories){ %>
+        
     <div class="row text-center m-auto">
-        <% for(let i=0;i<3;i++){ %>
+        <% categories.forEach((category, i)=>{ %>
         <div class="col-lg-3 col-md-3 col-sm-12 text-center ml-2">
-            <a class="title-link" href="/products/<%= categories[i].slug %>">
-                <img src="images/<%=i %> " alt="category" class="circle-img" />
-                <h4 class="mb-3 mt-3"><%=categories[i].title %></h4>
+            <a class="title-link" href="/products/<%=category.slug %>">
+                <img src="images/brand<%=category.slug %>.jpg " alt="category" class="circle-img" />
+                <h4 class="mb-3 mt-3"><%=category.title %></h4>
             </a>
         </div>
 
-        <% } %>
+        <% }) %>
         <div class="col-lg-1 col-md-1 col-sm-12 text-center mx-auto">
             <a href="/products">
                 <li class="fa fa-chevron-circle-right" aria-hidden="true"></li>
@@ -88,7 +89,7 @@
                             </a>
                             <div class="product-info">
                                 <a
-                                    href="/products/<%= product[i].category.slug %>/<%= products[i]._id %>"
+                                    href="/products/<%= products[i].category.slug %>/<%= products[i]._id %>"
                                     class="title-link"
                                 >
                                     <h6 class="mt-2 mb-2"><%= products[i].title %></h6>
@@ -112,22 +113,23 @@
             <!-- Silde 2 -->
             <div class="carousel-item">
                 <div class="row">
-                    <% for(let i=3; i<6; i++) { %>
+                    <% products.forEach((val, i)=>{ %>
+                        <% if(i>=3 && i<6){ %> 
                     <div class="col-md-4 product-index-box">
                         <div class="single-product d-flex flex-column h-100">
-                            <a class="title-link" href="/products/<%=products[i].category.slug%>/<%=products[i]._id%>">
-                                <img src="<%= products[i].imagePath %>" alt="Bag" class="img-fluid"
+                            <a class="title-link" href="/products/<%= val.category.slug%>/<%= val._id%>">
+                                <img src="<%= val.imagePath %>" alt="Bag" class="img-fluid"
                             /></a>
                             <div class="product-info">
                                 <a
                                     class="title-link"
-                                    href="/products/<%=products[i].category.slug%>/<%=products[i]._id%>"
+                                    href="/products/<%=val.category.slug%>/<%=val._id%>"
                                 >
-                                    <h6 class="mt-2 mb-2"><%= products[i].title %></h6>
+                                    <h6 class="mt-2 mb-2"><%= val.title %></h6>
                                 </a>
-                                <div class="price">$<%= products[i].price %></div>
+                                <div class="price">$<%= val.price %></div>
                             </div>
-                            <% if(products[i].available) {%>
+                            <% if(val.available) {%>
                             <a
                                 href="/add-to-cart/<%=products[i]._id%>"
                                 class="btn btn-block btn-secondary button-style mt-auto mb-2"
@@ -139,30 +141,31 @@
                             <%} %>
                         </div>
                     </div>
-                    <%}%>
+                    <%}})%>
                 </div>
             </div>
             <!-- Slide 3 -->
             <div class="carousel-item">
                 <div class="row">
-                    <% for(let i=6; i<9; i++) { %>
+                    <% products.forEach((val, i)=>{ %>
+                        <% if(i>=6 && i<9){ %> 
                     <div class="col-md-4 product-index-box">
                         <div class="single-product d-flex flex-column h-100">
-                            <a class="title-link" href="/products/<%=products[i].category.slug%>/<%=products[i]._id%>">
-                                <img src="<%= products[i].imagePath %>" alt="Bag" class="img-fluid"
+                            <a class="title-link" href="/products/<%=val.category.slug%>/<%=val._id%>">
+                                <img src="<%= val.imagePath %>" alt="Bag" class="img-fluid"
                             /></a>
                             <div class="product-info">
                                 <a
                                     class="title-link"
-                                    href="/products/<%=products[i].category.slug%>/<%=products[i]._id%>"
+                                    href="/products/<%=val.category.slug%>/<%=val._id%>"
                                 >
-                                    <h6 class="mt-2 mb-2"><%= products[i].title %></h6>
+                                    <h6 class="mt-2 mb-2"><%= val.title %></h6>
                                 </a>
-                                <div class="price">$<%= products[i].price %></div>
+                                <div class="price">$<%= val.price %></div>
                             </div>
-                            <% if(products[i].available) {%>
+                            <% if(val.available) {%>
                             <a
-                                href="/add-to-cart/<%=products[i]._id%>"
+                                href="/add-to-cart/<%=val._id%>"
                                 class="btn btn-block btn-secondary button-style mt-auto mb-2"
                             >
                                 Add to Cart
@@ -172,7 +175,7 @@
                             <%} %>
                         </div>
                     </div>
-                    <%}%>
+                    <%}})%>
                 </div>
             </div>
         </div>

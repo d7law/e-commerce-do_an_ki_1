@@ -8,7 +8,7 @@ const middleware = require('../middleware/index');
 const csrfProtection = csrf();
 router.use(csrfProtection);
 
-router.get('/', homeController.getHome);
+router.get('/home', homeController.getHome);
 
 module.exports = router;
 

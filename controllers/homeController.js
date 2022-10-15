@@ -8,6 +8,7 @@ class homeController {
     async getHome(req, res) {
         try {
             const products = await Product.find({}).sort('-createdAt').populate('category');
+            console.log(products)
             res.render('shop/home', { pageName: 'Home', products });
         } catch (err) {
             console.log(err);
