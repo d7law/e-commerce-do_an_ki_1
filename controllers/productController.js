@@ -1,6 +1,6 @@
 var moment = require('moment');
 const Product = require('../models/product');
-const Catagory = require('../models/category');
+const Category = require('../models/category');
 
 
 class productController {
@@ -12,7 +12,8 @@ class productController {
         let page = parseInt(req.query.page) || 1;
         try {
             const products = await Product.find({})
-                .sort.skip(perPage * page - parePage)
+                .sort('-createdAt')
+                .skip(perPage * page - perPage)
                 .limit(perPage)
                 .populate('category');
 
@@ -101,6 +102,7 @@ class productController {
         }
     }
 
+    //[GET] /:slug/:id
     async getIdBySLug(req, res) {
         const successMsg = req.flash('success')[0];
         const errorMsg = req.flash('error')[0];

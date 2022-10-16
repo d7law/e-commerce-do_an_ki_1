@@ -8,7 +8,10 @@ const middleware = require('../middleware/index');
 const csrfProtection = csrf();
 router.use(csrfProtection);
 
-router.get('/home', homeController.getHome);
+router.get('/', homeController.getHome);
+router.get('/shopping-cart', homeController.getHome);
+router.get('/add-to-cart/:id', homeController.addToCart);
+router.get('/reduce/:id', homeController.reduceFromCart);
+router.get('/remove-all/:id', homeController.removeAllFromCart);
 
 module.exports = router;
-
