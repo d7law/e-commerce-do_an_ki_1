@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const db = require('./config/db/connectdb').connect();
 const path = require('path');
 const passport = require('passport');
+const createError = require('http-errors');
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -14,7 +15,7 @@ const flash = require('connect-flash');
 const adminRouter = require('./routes/admin');
 
 //config passport
-require('./config/passport')
+require('./config/passport');
 // ejs view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -77,14 +78,26 @@ app.use((req, res, next) => {
 //router config
 const usersRouter = require('./routes/user.route');
 const productsRouter = require('./routes/product.route');
-const indexRouter = require('./routes/index')
+const indexRouter = require('./routes/index');
 app.use('/user', usersRouter);
 app.use('/products', productsRouter);
-app.use('/', indexRouter)
+app.use('/', indexRouter);
 
-app.get('/', (req, res) => {
-    res.send('hello world');
+//catch 404 and send to error handler
+app.use((req, res, next) => {
+    next(createError(404));
 });
+//error handler
+app.use((err, req, res, next) => {
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    res.status(err.status || 500);
+    res.render('pages/error', {pageName: '404'});
+});
+
 app.listen(process.env.PORT, () => {
     console.log('app is running');
 });
+
+module.exports = app;

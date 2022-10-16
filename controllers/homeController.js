@@ -15,6 +15,7 @@ class homeController {
             res.redirect('/');
         }
     }
+    //[GET] /
 }
 
 module.exports = new homeController();
