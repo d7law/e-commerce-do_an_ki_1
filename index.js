@@ -5,6 +5,7 @@ const db = require('./config/db/connectdb').connect();
 const path = require('path');
 const passport = require('passport');
 const createError = require('http-errors');
+const errorHandler = require('./middleware');
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -56,7 +57,7 @@ app.use(async (req, res, next) => {
 });
 
 //add breadcrumbs
-get_breadcrums = (url) => {
+get_breadcrumbs = (url) => {
     var rtn = [{ name: 'Home', url: '/' }],
         acc = '', //accumulative url
         arr = url.substring(1).split('/');
@@ -71,16 +72,18 @@ get_breadcrums = (url) => {
     return rtn;
 };
 app.use((req, res, next) => {
-    req.breadcrumbs = get_breadcrums(req.originalUrl);
+    req.breadcrumbs = get_breadcrumbs(req.originalUrl);
     next();
 });
 
 //router config
 const usersRouter = require('./routes/user.route');
 const productsRouter = require('./routes/product.route');
+const pagesRouter = require('./routes/pages.route');
 const indexRouter = require('./routes/index');
 app.use('/user', usersRouter);
 app.use('/products', productsRouter);
+app.use('/pages', pagesRouter)
 app.use('/', indexRouter);
 
 //catch 404 and send to error handler
@@ -88,13 +91,7 @@ app.use((req, res, next) => {
     next(createError(404));
 });
 //error handler
-app.use((err, req, res, next) => {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    res.status(err.status || 500);
-    res.render('pages/error', {pageName: '404'});
-});
+app.use(errorHandler.errorHandler);
 
 app.listen(process.env.PORT, () => {
     console.log('app is running');

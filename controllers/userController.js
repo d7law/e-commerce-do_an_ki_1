@@ -67,7 +67,7 @@ class userController {
                 req.session.oldUrl = null;
                 res.redirect(oldUrl);
             } else {
-                res.redirect('/user/profile');
+                res.redirect('user/profile');
             }
         } catch (err) {
             console.log(err);
@@ -81,8 +81,8 @@ class userController {
         const successMsg = req.flash('success')[0];
         const errorMsg = req.flash('error')[0];
         try {
-            allOrders = await Order.find({ user: req.user });
-            res.render('/user/profile', {
+            const allOrders = await Order.find({ user: req.user });
+            res.render('user/profile', {
                 orders: allOrders,
                 errorMsg,
                 successMsg,
