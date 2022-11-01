@@ -1,6 +1,5 @@
 /node_modules
 .env
 /.adminbro
-/seedDB/
 /views/shop/test.ejs
 /views/shop/test.js

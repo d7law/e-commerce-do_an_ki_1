@@ -9,7 +9,7 @@ const csrfProtection = csrf();
 router.use(csrfProtection);
 
 router.get('/', homeController.getHome);
-router.get('/shopping-cart', homeController.getHome);
+router.get('/shopping-cart', homeController.getCart);
 router.get('/add-to-cart/:id', homeController.addToCart);
 router.get('/reduce/:id', homeController.reduceFromCart);
 router.get('/remove-all/:id', homeController.removeAllFromCart);

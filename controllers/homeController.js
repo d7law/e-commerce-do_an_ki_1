@@ -30,9 +30,21 @@ class homeController {
                 res.render('shop/shopping-cart', {
                     cart: cart_user,
                     pageName: 'Giỏ hàng',
-                    products: await productsFromCart(req.session.cart),
+                    products: await productsFromCart(cart_user),
                 });
             }
+            if (!req.session.cart) {
+                return res.render('shop/shopping-cart', {
+                    cart: null,
+                    pageName: 'Giỏ hàng',
+                    products: null,
+                });
+            }
+            return res.render('shop/shopping-cart', {
+                cart: req.session.cart,
+                pageName: 'Shopping Cart',
+                products: await productsFromCart(req.session.cart),
+            });
         } catch (err) {
             console.log(err);
             res.redirect('/');
@@ -141,24 +153,24 @@ class homeController {
         const productId = req.params.id;
         let cart;
         try {
-            if(req.user){
-                cart = await findOne({user: req.user._id})
-            } else if(req.session.cart){
+            if (req.user) {
+                cart = await findOne({ user: req.user._id });
+            } else if (req.session.cart) {
                 cart = await new Cart(req.session.cart);
             }
-            let itemIndex = cart.items.findIndex((p)=>p.productId == productId);
-            if(itemIndex>-1){
-                cart.totalQty -=cart.items[itemIndex].qty;
-                cart.totalCost -=cart.items[index].price;
-                await cart.items.remove({_id: cart.items[itemIndex]._id});
+            let itemIndex = cart.items.findIndex((p) => p.productId == productId);
+            if (itemIndex > -1) {
+                cart.totalQty -= cart.items[itemIndex].qty;
+                cart.totalCost -= cart.items[index].price;
+                await cart.items.remove({ _id: cart.items[itemIndex]._id });
             }
             req.session.cart = cart;
             //save cart if user is log
-            if(req.user){
+            if (req.user) {
                 await cart.save();
             }
-            if(cart.totalQty <=0){
-                req.session.cart =null;
+            if (cart.totalQty <= 0) {
+                req.session.cart = null;
                 await Cart.findByIdAndRemove(cart._id);
             }
             res.redirect(res.header.referer);
