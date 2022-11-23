@@ -5,7 +5,7 @@ const Category = require('../models/category');
 const mongoose = require('mongoose');
 const faker = require('faker');
 const db = require('../config/db/connectdb');
-db.connect();
+db();
 
 async function seedDB() {
     faker.seed(0);

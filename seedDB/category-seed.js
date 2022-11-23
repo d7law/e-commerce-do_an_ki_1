@@ -3,7 +3,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const Category = require('../models/category');
 const mongoose = require('mongoose');
 const db = require('../config/db/connectdb');
-db.connect();
+db();
 
 async function seedDB() {
     async function seedCate(titleStr) {

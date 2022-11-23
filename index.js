@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config();
-const db = require('./config/db/connectdb').connect();
+const db = require('./config/db/connectdb');
+
 const path = require('path');
 const passport = require('passport');
 const createError = require('http-errors');
@@ -10,13 +11,15 @@ const errorHandler = require('./middleware');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
-var MongoStore = require('connect-mongo');
+var MongoStore = require('connect-mongo')(session);
 const Category = require('./models/category');
 const flash = require('connect-flash');
 const adminRouter = require('./routes/admin');
 
 //config passport
 require('./config/passport');
+
+db();
 // ejs view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,9 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
-        resave: false,
+        resave: true,
         saveUninitialized: false,
-        store: MongoStore.create({ mongoUrl: process.env.DATABASE_URI }),
+        store: new MongoStore({
+            mongooseConnection: mongoose.connection,
+        }),
         //set session expired is 24h
         cookie: { maxAge: 60 * 1000 * 60 * 24 },
     }),
@@ -83,7 +88,7 @@ const pagesRouter = require('./routes/pages.route');
 const indexRouter = require('./routes/index');
 app.use('/user', usersRouter);
 app.use('/products', productsRouter);
-app.use('/pages', pagesRouter)
+app.use('/pages', pagesRouter);
 app.use('/', indexRouter);
 
 //catch 404 and send to error handler

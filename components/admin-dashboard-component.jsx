@@ -31,8 +31,8 @@ const Dashboard = () => {
         <div>
             <img style={imgStyle} src="images/banner-admin-page.jpg" alt="dashboard-head" />
             <Wrapper>
-                <Title>Welcome to the Admin Panel</Title>
-                <Lead>Here you can manage your products and categories as well as view users and their orders.</Lead>
+                <Title>K25-HUFLIT</Title>
+                <Lead>Chúng em chào cô Thu ạ.</Lead>
             </Wrapper>
         </div>
     );
