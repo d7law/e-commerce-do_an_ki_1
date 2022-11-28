@@ -13,5 +13,6 @@ router.get('/shopping-cart', homeController.getCart);
 router.get('/add-to-cart/:id', homeController.addToCart);
 router.get('/reduce/:id', homeController.reduceFromCart);
 router.get('/remove-all/:id', homeController.removeAllFromCart);
+router.get('/checkout', middleware.isLoggedIn, homeController.checkOut);
 
 module.exports = router;

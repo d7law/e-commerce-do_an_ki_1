@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <% if (pageName) { %>
         <title>dLaw ShopShoes | <%= pageName %>
         </title>
@@ -39,7 +42,16 @@
     <div id="page-container">
         <div id="content-wrap">
             <div class="row nav-container mx-auto">
-                <div class="col-md-4 col-sm-12 col-xs-12">
+                <div class="col-md-2 col-sm-12 col-xs-12  logo-container">
+                    <a href="/">
+                        <img class="logo-img img-fluid" src="/images/logo-trans.png" alt="logo" />
+
+                    </a>
+                    <h6 class="logo-title pt-2">dLaw ShopShoes</h6>
+                </div>
+
+                <div class="col-md-6 col-sm-12 col-xs-12">
+
                     <div class="search-container">
                         <form class="form-inline" action="/products/search" method="GET">
                             <input class="search-input" type="search" placeholder="Search" name="search" />
@@ -47,14 +59,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 col-sm-12 col-xs-12 logo-container">
-                    <a href="/">
-                        <img class="logo-img img-fluid" src="/images/logo.png" alt="logo" />
-                        <h4 class="logo-title pt-2">dLaw ShopShoes</h4>
-                    </a>
-                </div>
-
-                <div class="col-md-5 col-sm-12 col-xs-12 right-nav">
+                <div class="col-md-4 col-sm-12 col-xs-12 right-nav">
                     <ul>
                         <li>
                             <a href="/shopping-cart">
@@ -91,4 +96,3 @@
                     </ul>
                 </div>
             </div>
-            

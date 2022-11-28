@@ -55,6 +55,7 @@ class homeController {
     async addToCart(req, res) {
         const productId = req.params.id;
         try {
+            //get the TRUE CART
             let user_cart;
             if (req.user) {
                 user_cart = await Cart.findOne({ user: req.user._id });
@@ -70,9 +71,7 @@ class homeController {
 
             //add product to the cart
             const product = await Product.findById(productId);
-            const itemIndex = cart.items.findIndex((p) => {
-                p.productId == productId;
-            });
+            const itemIndex = cart.items.findIndex((p) => p.productId == productId);
             if (itemIndex > -1) {
                 //if products exists in the cart, update the quantity
                 cart.items[itemIndex].qty++;
@@ -99,7 +98,7 @@ class homeController {
             }
             req.session.cart = cart;
             req.flash('success', 'Thêm sản phẩm vào Giỏ hàng thành công');
-            res.redirect('req.header.referer');
+            res.redirect(req.headers.referer);
         } catch (err) {
             console.log(err);
             res.redirect('/');
@@ -127,7 +126,7 @@ class homeController {
                 cart.totalQty--;
                 cart.totalConst -= product.price;
                 //if count = 0 => remove it
-                if (cart.items[itemIndex] <= 0) {
+                if (cart.items[itemIndex].qty <= 0) {
                     await cart.items.remove({ _id: cart.items[itemIndex]._id });
                 }
                 req.session.cart = cart;
@@ -141,7 +140,7 @@ class homeController {
                     await Cart.findByIdAndRemove(cart._id);
                 }
             }
-            res.redirect(req.header.referer);
+            res.redirect(req.headers.referer);
         } catch (err) {
             console.log(err);
             res.redirect('/');
@@ -154,30 +153,50 @@ class homeController {
         let cart;
         try {
             if (req.user) {
-                cart = await findOne({ user: req.user._id });
+                cart = await Cart.findOne({ user: req.user._id });
             } else if (req.session.cart) {
                 cart = await new Cart(req.session.cart);
             }
+            //fnd the item with productId
             let itemIndex = cart.items.findIndex((p) => p.productId == productId);
             if (itemIndex > -1) {
+                //find the product to find its price
                 cart.totalQty -= cart.items[itemIndex].qty;
-                cart.totalCost -= cart.items[index].price;
+                cart.totalCost -= cart.items[itemIndex].price;
                 await cart.items.remove({ _id: cart.items[itemIndex]._id });
             }
             req.session.cart = cart;
-            //save cart if user is log
+            //save the cart it only if user is logged in
             if (req.user) {
                 await cart.save();
             }
+            //delete cart if qty is 0
             if (cart.totalQty <= 0) {
                 req.session.cart = null;
                 await Cart.findByIdAndRemove(cart._id);
             }
-            res.redirect(res.header.referer);
+            res.redirect(req.headers.referer);
         } catch (err) {
-            console.log(err);
+            console.log(err.message);
             res.redirect('/');
         }
+    }
+
+    //[GET] /checkout/
+    async checkOut(req, res) {
+        const errorMsg = req.flash('error')[0];
+        if (!req.session.cart) {
+            return res.redirect('/shopping-cart');
+        }
+        //load cart with session's cart id from db
+        let cart = await Cart.findById(req.session.cart._id);
+
+        res.render('shop/checkout', {
+            total: cart.totalCost,
+            csrfToken: req.csrfToken(),
+            errorMsg,
+            pageName: 'Checkout',
+        });
     }
 }
 

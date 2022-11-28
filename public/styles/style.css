@@ -50,7 +50,8 @@ a:hover,
 }
 
 .search-container {
-    width: 70%;
+    width: 100%;
+    padding-left: 40%;
 }
 
 .right-nav {
@@ -84,6 +85,28 @@ a:hover,
 .logo-title {
     font-weight: 600;
     margin: 4px 1px;
+    animation: changeTitleColor 2s infinite;
+}
+@keyframes changeTitleColor {
+    0% {
+        color: red;
+    }
+
+    25% {
+        color: yellow;
+    }
+
+    50% {
+        color: green;
+    }
+
+    75% {
+        color: brown;
+    }
+
+    100% {
+        color: red;
+    }
 }
 
 .logo-img {
@@ -94,6 +117,8 @@ a:hover,
 
 .navbar-custom {
     background-color: var(--dark-blue);
+    background-image: url(https://forum.selfhtml.org/images/e3acfebc-51fe-4a57-a2ad-b276f3c8ad55.jpg);
+    background-size: cover;
 }
 
 .navbar-custom .navbar-brand,
@@ -154,6 +179,10 @@ a:hover,
 }
 
 /* HOME PAGE */
+.image-cropped {
+    height: 300px;
+    object-fit: cover;
+}
 
 .circle-img {
     object-fit: cover;
