@@ -1,0 +1,74 @@
+<div class="form-inline form-item">
+    <div class="form-control w-1">
+        <select placeholder="Tỉnh/Thành phố" id="province" type="text">
+            <option value="invalid">Tỉnh/Thành phố</option>
+
+        </select>
+        <small></small>
+    </div>
+    <div class="form-control w-1">
+        <select placeholder="Quận/Huyện" id="district" type="text">
+            <option value="invalid">Quận/Huyện</option>
+
+        </select>
+        <small></small>
+    </div>
+    <div class="form-control w-1">
+        <select placeholder="Phường/Xã" id="village" type="text">
+            <option value="invalid">Phường/Xã</option>
+
+        </select>
+        <small></small>
+    </div>
+</div>
+
+<script>
+    const city = document.getElementById('province'); //thanh pho
+    const district = document.getElementById('district'); //quan/huyen
+    const ward = document.getElementById('village');//
+
+    fetch('/data.json')
+        .then((response) => response.json())
+        .then((data) => renderCity(data));
+
+    function renderCity(data) {
+        for (var item of data) {
+            // kh?i t?o ra ??i t??ng c?c t?nh th?nh ph?
+            city.options[city.options.length] = new Option(item.Name, item.Id);
+        }
+
+        // x? l? khi thay ??i t?nh th?nh th? s? hi?n th? ra qu?n huy?n thu?c t?nh th?nh ??
+        city.onchange = () => {
+            district.length = 1;
+
+            console.log(city.value);
+            if (city.value != '') {
+                const result = data.filter(n => n.Id === city.value);
+
+                for (var item of result[0].Districts) {
+                    district.options[district.options.length] = new Option(
+                        item.Name,
+                        item.Id
+                    );
+                }
+            } else {
+                console.log('alo');
+            }
+        };
+
+        district.onchange = () => {
+            ward.length = 1;
+            const result = data.filter((el) => el.Id === city.value);
+            if (district.value != ' ') {
+                // l?y d? li?u qu?n v? trong d? li?u qu?n ch? t?n ???ng
+                const resultDistrict = result[0].Districts.filter(
+                    (el) => el.Id === district.value
+                );
+
+                for (var item of resultDistrict[0].Wards) {
+                    ward.options[ward.options.length] = new Option(item.Name, item.id);
+                }
+            }
+        };
+    }
+</script>

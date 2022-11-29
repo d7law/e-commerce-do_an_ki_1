@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 const Cart = require('../models/cart');
 const Order = require('../models/order');
 const Category = require('../models/category');
@@ -124,7 +125,7 @@ class homeController {
                 cart.items[itemIndex].qty--;
                 cart.items[itemIndex].price -= product.price;
                 cart.totalQty--;
-                cart.totalConst -= product.price;
+                cart.totalCost -= product.price;
                 //if count = 0 => remove it
                 if (cart.items[itemIndex].qty <= 0) {
                     await cart.items.remove({ _id: cart.items[itemIndex]._id });
@@ -184,6 +185,7 @@ class homeController {
 
     //[GET] /checkout/
     async checkOut(req, res) {
+        //console.log(process.env.STRIPE_PRIVATE_KEY);
         const errorMsg = req.flash('error')[0];
         if (!req.session.cart) {
             return res.redirect('/shopping-cart');
@@ -197,6 +199,51 @@ class homeController {
             errorMsg,
             pageName: 'Checkout',
         });
+    }
+
+    //[POST] /checkout
+    async checkingOut(req, res) {
+        if (!req.session.cart) {
+            return res.redirect('/shopping-cart');
+        }
+        const cart = await Cart.findById(req.session.cart._id);
+        stripe.charges.create(
+            {
+                amount: cart.totalCost * 100,
+                currency: 'usd',
+                source: req.body.stripeToken,
+                description: 'Test charge',
+            },
+            (err, charge) => {
+                if (err) {
+                    req.flash('error', err.message);
+                    console.log('1234');
+                    console.log(err);
+                    return res.redirect('/checkout');
+                }
+                const order = new Order({
+                    user: req.user,
+                    cart: {
+                        totalQty: cart.totalQty,
+                        totalCost: cart.totalCost,
+                        items: cart.items,
+                    },
+                    address: req.body.address,
+                    paymentId: charge.id,
+                });
+                order.save(async (err, newOrder) => {
+                    if (err) {
+                        console.log(err);
+                        return res.redirect('/checkout');
+                    }
+                    await cart.save();
+                    await Cart.findByIdAndDelete(cart._id);
+                    req.flash('success', 'Thanh toán thành công');
+                    req.session.cart = null;
+                    res.redirect('/user/profile');
+                });
+            },
+        );
     }
 }
 
