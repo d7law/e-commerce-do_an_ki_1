@@ -23,13 +23,14 @@ const Wrapper = styled.section`
 
 const imgStyle = {
     width: '100%',
-    height: '30%',
+    height: '300px',
+    objectFit: 'cover',
 };
 
 const Dashboard = () => {
     return (
         <div>
-            <img style={imgStyle} src="images/banner-admin-page.jpg" alt="dashboard-head" />
+            <img style={imgStyle} src="images/banner-Nike.jpg" alt="dashboard-head" />
             <Wrapper>
                 <Title>K25-HUFLIT</Title>
                 <Lead>Chúng em chào cô Thu ạ.</Lead>

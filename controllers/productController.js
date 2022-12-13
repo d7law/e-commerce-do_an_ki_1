@@ -2,7 +2,6 @@ var moment = require('moment');
 const Product = require('../models/product');
 const Category = require('../models/category');
 
-
 class productController {
     //[GET] /product/
     async getAllProducts(req, res) {
@@ -94,7 +93,7 @@ class productController {
                 current: page,
                 breadcrumbs: req.breadcrumbs,
                 home: '/products/' + req.params.slug.toString() + '/?',
-                page: Math.ceil(count / perPage),
+                pages: Math.ceil(count / perPage),
             });
         } catch (e) {
             console.log(e);
@@ -107,8 +106,7 @@ class productController {
         const successMsg = req.flash('success')[0];
         const errorMsg = req.flash('error')[0];
         try {
-            const product = await Product.findById(req.params.id)
-                .populate('category');
+            const product = await Product.findById(req.params.id).populate('category');
             res.render('shop/product', {
                 pageName: product.title,
                 product,
