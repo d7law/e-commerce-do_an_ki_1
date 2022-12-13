@@ -24,7 +24,9 @@ async function seedDB() {
     }
 
     await seedCate('Nike');
-    await seedCate('Adidas');
+    //await seedCate('Adidas');
+    await seedCate('FILA');
+
     await closeDB();
 }
 
